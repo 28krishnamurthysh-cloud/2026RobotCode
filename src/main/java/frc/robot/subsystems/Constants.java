@@ -1,5 +1,11 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
@@ -55,6 +61,33 @@ public class Constants {
     // }
 
     public static final double odometryFrequency = 50.0; // hz (50 is default of 20ms)
+
+    public static class ShooterDemoConstants {
+        public static final TalonFXConfiguration shooterConfig;
+
+        public static final SparkMaxConfig feederConfig;
+        
+        static {
+            shooterConfig = new TalonFXConfiguration()
+                .withCurrentLimits(
+                    new CurrentLimitsConfigs()
+                        .withSupplyCurrentLimitEnable(true)
+                        .withStatorCurrentLimit(60)
+                ).withMotorOutput(
+                    new MotorOutputConfigs()
+                        .withNeutralMode(NeutralModeValue.Brake)
+                );
+            
+            feederConfig = new SparkMaxConfig();
+            feederConfig
+                .idleMode(IdleMode.kBrake)
+                .smartCurrentLimit(30)
+                .voltageCompensation(12);
+            feederConfig.encoder
+                .velocityConversionFactor(1.0 / 60);
+                
+        }
+    }
 
     public static class FieldConstants {
         public static Pose2d getHubCenter() {
